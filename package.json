@@ -1,13 +1,24 @@
 {
   "author": "Bill Yeh",
   "name": "pixelr",
-  "description": "Read image pixels (JPEG and PNG).",
-  "version": "0.0.4",
+  "description": "Dead simple pixel reader. Read pixels from JPEG and PNG images.",
+  "version": "0.0.22",
+  "homepage": "https://github.com/billyeh/pixelr/",
   "repository": {
-    "url": ""
+    "type": "git",
+    "url": "git://github.com/billyeh/pixelr.git"
   },
+  "keywords": [
+    "graphics",
+    "pixel",
+    "png",
+    "jpeg",
+    "read"
+  ],
   "main": "./main",
-  "dependencies": {},
+  "dependencies": {
+    "pngjs": "0.4.0"
+  },
   "devDependencies": {},
   "optionalDependencies": {},
   "engines": {

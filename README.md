@@ -2,6 +2,27 @@ About
 ========
 Simple pixel reader, supporting JPEG and PNG formats.
 
+Example
+==========
+```
+var pixelr = require('pixelr');
+
+/** pixelr.read(filename, format, callback)
+ * Format can be either 'jpeg' or 'png'.
+ * This function returns a one-dimensional array of values.
+ * PNGS should have 4 values per pixel: R, G, B, Alpha
+ * JPEGS should have 3 values per pixel: R, G, B.
+ * The array of pixels is passed as the parameter for the callback.
+ */
+pixelr.read("image.jpeg", "jpeg", console.log);
+```
+
+Documentation
+===============
+JPEG parsing uses `libjpeg`, and PNG parsing uses [`pngjs`](https://npmjs.org/package/pngjs).
+
+The read() function assumes that colors fit in 8-bit integers and have 4 channels for PNGs, and 3 for JPEGs.
+
 Installation
 ===============
 ```
