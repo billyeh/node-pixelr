@@ -1,0 +1,16 @@
+{
+  "author": "Bill Yeh",
+  "name": "pixelr",
+  "description": "Read image pixels (JPEG and PNG).",
+  "version": "0.0.4",
+  "repository": {
+    "url": ""
+  },
+  "main": "./main",
+  "dependencies": {},
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  }
+}
