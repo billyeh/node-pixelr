@@ -9,9 +9,9 @@ var pixelr = require('pixelr');
 
 /** pixelr.read(filename, format, callback)
  * Format can be either 'jpeg' or 'png'.
- * This function returns a one-dimensional array of values.
- * PNGS should have 4 values per pixel: R, G, B, Alpha
- * JPEGS should have 3 values per pixel: R, G, B.
+ * This function creates a one-dimensional array of values.
+ * PNGs have 4 values per pixel: R, G, B, Alpha
+ * JPEGs have 3 values per pixel: R, G, B.
  * The array of pixels is passed as the parameter for the callback.
  */
 pixelr.read("image.jpeg", "jpeg", console.log);
