@@ -13,7 +13,8 @@
     "pixel",
     "png",
     "jpeg",
-    "read"
+    "read",
+    "image"
   ],
   "main": "./main",
   "dependencies": {
