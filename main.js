@@ -4,7 +4,9 @@ var jpeg = require('./build/Release/pixelr')
   , png  = require('pngjs').PNG
   , fs   = require('fs');
 
-var pixels = [];
+var pixels = []
+  , width
+  , height;
 
 function read(filename, type, callback) {
   if (type === 'png') {
@@ -12,7 +14,7 @@ function read(filename, type, callback) {
   }
   else if (type === 'jpeg') {
     pixels = jpeg.read(filename);
-    callback(pixels);
+    callback({pixels: pixels.pixels, width: pixels.width, height: pixels.height});
   }
   else {
     console.log('Unidentifiable image format: ' + type);
@@ -25,6 +27,8 @@ function readPng(filename, cb) {
         filterType: 4
     }))
     .on('parsed', function() {
+      width  = this.width;
+      height = this.height;
       for (var y = 0; y < this.height; y++) {
         for (var x = 0; x < this.width; x++) {
           var idx = (this.width * y + x) << 2;
@@ -34,7 +38,7 @@ function readPng(filename, cb) {
           pixels[idx+3] = this.data[idx+3];
         }
       }
-      cb(pixels);
+      cb({pixels: pixels, width: width, height: height});
     });
 }
 

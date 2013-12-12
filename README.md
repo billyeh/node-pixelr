@@ -12,9 +12,15 @@ var pixelr = require('pixelr');
  * This function creates a one-dimensional array of values.
  * PNGs have 4 values per pixel: R, G, B, Alpha
  * JPEGs have 3 values per pixel: R, G, B.
- * The array of pixels is passed as the parameter for the callback.
+ * The callback takes an object with properties 'pixels' (an array), 'width', and 'height'.
  */
-pixelr.read("image.jpeg", "jpeg", console.log);
+pixelr.read("image.jpeg", "jpeg", doSomething);
+
+doSomething(data) {
+  console.log(data.pixels);
+  console.log(data.width);
+  console.log(data.height);
+}
 ```
 
 Documentation

@@ -6,6 +6,8 @@
 
 unsigned int size;
 unsigned int *raw_image = NULL;
+unsigned int width;
+unsigned int height;
 
 int read_jpeg_file(char *filename)
 {
@@ -25,6 +27,8 @@ int read_jpeg_file(char *filename)
   jpeg_read_header(&cinfo, TRUE);
   jpeg_start_decompress(&cinfo);
 
+  width = cinfo.output_width;
+  height = cinfo.output_height;
   size = cinfo.output_width*cinfo.output_height*cinfo.num_components*sizeof(unsigned int);
   raw_image = (unsigned int *)malloc(size);
   row_pointer[0] = (unsigned char *)malloc(cinfo.output_width*cinfo.num_components);
@@ -46,6 +50,21 @@ int read_jpeg_file(char *filename)
 
 using namespace v8;
 
+Handle<Value> CreateObject(const Arguments& args) {
+  HandleScope scope;
+
+  Local<Object> obj = Object::New();
+  Local<Array> pic = Array::New(size / sizeof(unsigned int));
+  for (unsigned int i = 0; i < size / sizeof(unsigned int); i++) {
+    pic->Set(i, Number::New(raw_image[i]));
+  }
+  obj->Set(String::NewSymbol("pixels"), pic);
+  obj->Set(String::NewSymbol("width"), Number::New(width));
+  obj->Set(String::NewSymbol("height"), Number::New(height));
+
+  return obj;
+}
+
 Handle<Value> Read(const Arguments& args) {
   HandleScope scope;
 
@@ -64,11 +83,7 @@ Handle<Value> Read(const Arguments& args) {
     return scope.Close(Undefined());
   }
 
-  Local<Array> pic = Array::New(size / sizeof(unsigned int));
-  for (unsigned int i = 0; i < size / sizeof(unsigned int); i++) {
-    pic->Set(i, Number::New(raw_image[i]));
-  }
-  return scope.Close(pic);
+  return scope.Close(CreateObject(args));
 }
 
 void init(Handle<Object> exports) {
