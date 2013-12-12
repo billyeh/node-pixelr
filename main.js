@@ -4,17 +4,18 @@ var jpeg = require('./build/Release/pixelr')
   , png  = require('pngjs').PNG
   , fs   = require('fs');
 
-var pixels = []
+var image
   , width
   , height;
 
 function read(filename, type, callback) {
+  image = {'pixels': [], 'width': 0, 'height': 0};
   if (type === 'png') {
     readPng(filename, callback);
   }
   else if (type === 'jpeg') {
-    pixels = jpeg.read(filename);
-    callback({pixels: pixels.pixels, width: pixels.width, height: pixels.height});
+    image = jpeg.read(filename);
+    callback(image);
   }
   else {
     console.log('Unidentifiable image format: ' + type);
@@ -27,19 +28,20 @@ function readPng(filename, cb) {
         filterType: 4
     }))
     .on('parsed', function() {
-      width  = this.width;
-      height = this.height;
+      image['width']  = this.width;
+      image['height'] = this.height;
       for (var y = 0; y < this.height; y++) {
         for (var x = 0; x < this.width; x++) {
           var idx = (this.width * y + x) << 2;
-          pixels[idx]   = this.data[idx];
-          pixels[idx+1] = this.data[idx+1];
-          pixels[idx+2] = this.data[idx+2];
-          pixels[idx+3] = this.data[idx+3];
+          image['pixels'][idx]   = this.data[idx];
+          image['pixels'][idx+1] = this.data[idx+1];
+          image['pixels'][idx+2] = this.data[idx+2];
+          image['pixels'][idx+3] = this.data[idx+3];
         }
       }
-      cb({pixels: pixels, width: width, height: height});
+      cb(image);
     });
 }
 
 exports.read = read;
+
