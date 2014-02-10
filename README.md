@@ -4,7 +4,7 @@ Simple pixel reader, supporting JPEG and PNG formats.
 
 Example
 ==========
-This is how I ended up using `pixelr` in my project to create video chatting in the terminal (https://github.com/billyeh/termchat): to read pixels from an image, compress them, and match them to colors to form a string I could output to the terminal.
+This is how I ended up using `pixelr` in my project to create video chatting in the terminal (https://github.com/billyeh/termchat). I  read pixels from an image, compress them, and match them to colors to form a string I could output to the terminal.
 
 ```
 var pixelr = require('pixelr')
