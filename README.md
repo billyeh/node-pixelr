@@ -4,22 +4,92 @@ Simple pixel reader, supporting JPEG and PNG formats.
 
 Example
 ==========
+This is how I ended up using `pixelr` in my project to create video chatting in the terminal (https://github.com/billyeh/termchat): to read pixels from an image, compress them, and match them to colors to form a string I could output to the terminal.
+
 ```
-var pixelr = require('pixelr');
+var pixelr = require('pixelr')
+  , colors = require('./node_modules/blessed/lib/colors');
+// Colors.js contains a function to match RGB colors to terminal characters.
+// It's from the awesome library Blessed: https://github.com/chjj/blessed
 
 /** pixelr.read(filename, format, callback)
  * Format can be either 'jpeg' or 'png'.
  * This function creates a one-dimensional array of values.
  * PNGs have 4 values per pixel: R, G, B, Alpha
- * JPEGs have 3 values per pixel: R, G, B.
+ * JPEGs have 3 values per pixel: R, G, B
  * The callback takes an object with properties 'pixels' (an array), 'width', and 'height'.
  */
-pixelr.read("image.jpeg", "jpeg", doSomething);
+pixelr.read("image.jpeg", "jpeg", asciizeImage);
 
-doSomething(data) {
-  console.log(data.pixels);
-  console.log(data.width);
-  console.log(data.height);
+function asciizeImage(image) {
+  return asciize(image, 400, 400);
+}
+
+function asciize(image, asciiWidth, asciiHeight) {
+  var countedColors = countColors(image, asciiWidth, asciiHeight)
+    , ascii = ''
+    , ansiColorCode
+    , previousColor = -2;
+
+  for (var i = 0; i < countedColors.length; i++) {
+    ansiColorCode = sortColors(countedColors[i])[0].color;
+    if (ansiColorCode !== previousColor) {
+      ascii += '\033[38;5;' + ansiColorCode + 'm';
+      previousColor = ansiColorCode;
+    }
+    ascii += '#';
+  }
+
+  return ascii + '\033[0m';
+}
+
+function sortColors(countedColors) {
+  var sortedColors = []
+    , color;
+
+  for (color in countedColors) {
+    sortedColors.push({'color': color, 'count': countedColors[color]});
+  }
+  return sortedColors.sort(s);
+
+  function s(a, b) {
+    if (a.count < b.count) {
+      return 1;
+    } else if (a.count > b.count) {
+      return -1;
+    }
+    return 0;
+  }
+}
+
+function countColors(image, asciiWidth, asciiHeight) {
+  var colorCount = []
+    , blockWidth  = image.width / asciiWidth
+    , blockHeight = image.height / asciiHeight
+    , index = 0
+    , pixelIndex
+    , pixelColor;
+
+  for (var i = 0; i < image.pixels.length; i += 3) {
+    pixelIndex = i / 3;
+    index = Math.floor(pixelIndex / blockWidth) % asciiWidth + 
+            Math.floor(pixelIndex / image.width / blockHeight) * asciiWidth;
+    if (!colorCount[index]) {
+      colorCount[index] = {};
+    }
+    pixelColor = colors.match(image.pixels[i], image.pixels[i + 1], image.pixels[i + 2]);
+    if (!(pixelColor in colorCount[index])) {
+      colorCount[index][pixelColor] = 0;
+    }
+    // Assign less weight to grayscale values for a more interesting picture
+    if (pixelColor >= 232 || pixelColor === 59) {
+      colorCount[index][pixelColor] += .5;
+    } else {
+      colorCount[index][pixelColor]++;
+    }
+  }
+
+  return colorCount;
 }
 ```
 

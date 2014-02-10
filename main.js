@@ -44,4 +44,3 @@ function readPng(filename, cb) {
 }
 
 exports.read = read;
-

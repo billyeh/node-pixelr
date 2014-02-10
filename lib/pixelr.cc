@@ -16,7 +16,7 @@ int read_jpeg_file(char *filename)
   JSAMPROW row_pointer[1];
   FILE *infile = fopen(filename, "rb");
   unsigned long location = 0;
-  int i = 0;
+  unsigned int i = 0;
   if (!infile) {
       printf("Error opening jpeg file %s\n!", filename);
       return -1;
