@@ -2,7 +2,7 @@
   "author": "Bill Yeh",
   "name": "pixelr",
   "description": "Simple pixel reader. Read pixels from JPEG and PNG images.",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "homepage": "https://github.com/billyeh/pixelr/",
   "repository": {
     "type": "git",
