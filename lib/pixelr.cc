@@ -45,7 +45,10 @@ int read_jpeg_file(char *filename)
   return 1;
 }
 
-#define BUILDING_NODE_EXTENSION
+#ifndef BUILDING_NODE_EXTENSION
+  #define BUILDING_NODE_EXTENSION
+#endif
+
 #include <node.h>
 
 using namespace v8;
