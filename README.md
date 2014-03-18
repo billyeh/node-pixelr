@@ -21,7 +21,8 @@ var pixelr = require('pixelr')
  */
 pixelr.read("image.jpeg", "jpeg", asciizeImage);
 
-function asciizeImage(image) {
+function asciizeImage(err, image) {
+  if (err) { console.log(err); return; }
   return asciize(image, 400, 400);
 }
 
