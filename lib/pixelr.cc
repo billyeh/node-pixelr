@@ -71,8 +71,14 @@ Handle<Value> CreateObject(const Arguments& args) {
 Handle<Value> Read(const Arguments& args) {
   HandleScope scope;
 
-  if (args.Length() < 1) {
-    ThrowException(Exception::TypeError(String::New("Specify an image filename to read")));
+  Local<Function> callback = Local<Function>::Cast(args[1]);
+
+  if (args.Length() < 2) {
+    Local<Value> err = Exception::Error(String::New("Specify an image filename to read"));    
+    Local<Value> argv[] = { err };
+
+    callback->Call(Context::GetCurrent()->Global(), 1, argv);
+
     return scope.Close(Undefined());
   }
 
@@ -82,8 +88,21 @@ Handle<Value> Read(const Arguments& args) {
   read_jpeg_file(filename);
 
   if (!raw_image) {
-    ThrowException(Exception::TypeError(String::New("Error reading image file")));
+    Local<Value> err = Exception::Error(String::New("Error reading image file"));    
+    Local<Value> argv[] = { err };
+
+    callback->Call(Context::GetCurrent()->Global(), 1, argv);
+    
     return scope.Close(Undefined());
+  }
+  else {
+    Handle<Value> value = CreateObject(args);
+    Local<Value> argv[] = {
+            Local<Value>::New(Null()),
+            Local<Value>::New(value),
+    };
+    callback->Call(Context::GetCurrent()->Global(), 2, argv);
+    return scope.Close(value);
   }
 
   return scope.Close(CreateObject(args));

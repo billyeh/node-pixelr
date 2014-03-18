@@ -8,14 +8,16 @@ var image
   , width
   , height;
 
-function read(filename, type, callback) {
+function read(filename, type, cb) {
   image = {'pixels': [], 'width': 0, 'height': 0};
   if (type === 'png') {
-    readPng(filename, callback);
+    readPng(filename, cb);
   }
   else if (type === 'jpeg') {
-    image = jpeg.read(filename);
-    callback(image);
+    jpeg.read(filename, function(err, image) {
+      if (err) cb(err);        
+      cb(null, image);
+    });    
   }
   else {
     console.log('Unidentifiable image format: ' + type);
@@ -39,7 +41,7 @@ function readPng(filename, cb) {
           image['pixels'][idx+3] = this.data[idx+3];
         }
       }
-      cb(image);
+      cb(null, image);
     });
 }
 
