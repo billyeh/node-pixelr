@@ -65,6 +65,8 @@ Handle<Value> CreateObject(const Arguments& args) {
   obj->Set(String::NewSymbol("width"), Number::New(width));
   obj->Set(String::NewSymbol("height"), Number::New(height));
 
+  free(raw_image);
+
   return obj;
 }
 
